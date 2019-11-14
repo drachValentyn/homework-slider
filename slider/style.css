@@ -1,0 +1,55 @@
+body{
+    overflow-x: hidden;
+}
+
+#slider-wrap {
+    height: 312px;
+    display: flex;
+    justify-content: flex-start;
+    position: relative;
+    overflow-x: hidden;
+    width: 936px;
+    margin: auto;
+    border: 3px solid #c0c0c0;
+}
+
+#slider{
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    position: relative;
+    font-family: sans-serif;
+    display: flex;
+    flex-shrink: 0;
+    transition: all 0.5s;
+}
+
+.single-slide {
+    width: 312px;
+    height: 312px;
+    pointer-events: none;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
+}
+
+h1{
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 36px;
+    margin: 60px auto 40px;
+}
+
+.btn-block{
+    max-width: 50%;
+    margin: 50px auto 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+
+
+
