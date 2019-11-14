@@ -1,3 +1,6 @@
+import './style.scss';
+import _ from 'lodash';
+
 const sliderWrap = document.getElementById('slider-wrap')
 const slider = document.getElementById('slider')
 const numSlider = slider.children.length
