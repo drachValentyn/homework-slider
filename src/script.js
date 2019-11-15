@@ -1,80 +1,90 @@
 import './style.scss';
-import _ from 'lodash';
 
-const sliderWrap = document.getElementById('slider-wrap')
-const slider = document.getElementById('slider')
-const numSlider = slider.children.length
-
-const next = document.getElementById('next')
-const prev = document.getElementById('prev')
-
-let direction;
-let startX = null;
-let i = 0;
-
-slider.addEventListener('transitionend', changeSlide, false)
-
-next.addEventListener('click', nextSlide, false)
-prev.addEventListener('click',  prevSlide, false)
-
-slider.addEventListener('mousedown', lock, false)
-slider.addEventListener('touchstart', lock, false)
-
-slider.addEventListener('mouseup', swipe, false)
-slider.addEventListener('touchend', swipe, false)
-
-function prevSlide () {
-  if (direction === -1) {
-    direction = 1
-    slider.appendChild(slider.firstElementChild)
-  }
-  sliderWrap.style.justifyContent = 'flex-end'
-  slider.style.transform = 'translate(20%)'
-
+function unify(e) {
+    return e.changedTouches ? e.changedTouches[0] : e
 }
 
-function nextSlide () {
-  direction = -1
-  sliderWrap.style.justifyContent = 'flex-start'
-  slider.style.transform = 'translate(-20%)'
+function lock(e) {
+    start = unify(e).clientX
 }
 
-function changeSlide() {
-  if (direction === 1) {
-    slider.prepend(slider.lastElementChild)
-  } else {
-    slider.appendChild(slider.firstElementChild)
-  }
 
-  slider.style.transition = 'none'
-  slider.style.transform = 'translate(0)'
-  setTimeout(() => {
-    slider.style.transition = 'all 0.5s'
-  })
-}
-
-function unify (e) {
-  return e.changedTouches ? e.changedTouches[0] : e
-}
-
-function lock (e) {
-  startX = unify(e).clientX
-}
-
-function swipe (e) {
-  if (startX || startX === 0) {
-
-    let dirx = unify(e).clientX - startX
-
-    let s = Math.sign(dirx)
-
-    if ((i > 0 || s < 0) && (i < numSlider - 1 || s > 0)) {
-      nextSlide()
-    } else {
-      prevSlide()
-
+class MySlider {
+    constructor() {
+        this.sliderWrap = document.getElementById('slider-wrap');
+        this.slider = document.getElementById('slider');
+        this.numSlider = this.slider.children.length;
+        this.next = document.getElementById('next');
+        this.prev = document.getElementById('prev');
+        this.direction;
+        this.startX = null;
+        this.i = 0;
     }
 
-    startX = null
-  }
+    changeSlide() {
+        if (this.direction === 1) {
+            this.slider.prepend(this.slider.lastElementChild)
+        } else {
+            this.slider.appendChild(this.slider.firstElementChild)
+        }
+
+        this.slider.style.transition = 'none';
+        this.slider.style.transform = 'translate(0)';
+        setTimeout(() => {
+            this.slider.style.transition = 'all 0.5s'
+        })
+    }
+
+    prevSlide() {
+        if (this.direction === -1) {
+            this.direction = 1;
+            this.slider.appendChild(this.slider.firstElementChild)
+        }
+        this.sliderWrap.style.justifyContent = 'flex-end';
+        this.slider.style.transform = 'translate(20%)'
+    }
+
+    nextSlide() {
+        this.direction = -1;
+        this.sliderWrap.style.justifyContent = 'flex-start';
+        this.slider.style.transform = 'translate(-20%)'
+    }
+
+    addListener() {
+        this.slider.addEventListener('transitionend', this.changeSlide.bind(this, null, 'slider'));
+        this.next.addEventListener('click', this.nextSlide.bind(this, null, 'next'));
+        this.prev.addEventListener('click', this.prevSlide.bind(this, null, 'prev'));
+    }
+
 }
+
+
+//---create new slider
+
+const newSlider = new MySlider();
+
+newSlider.addListener();
+
+
+//---add swipe to slider
+let start = newSlider.startX;
+let test = newSlider.slider;
+
+function swipe(e) {
+    if (start || start === 0) {
+        let dirx = unify(e).clientX - start;
+        let s = Math.sign(dirx);
+        if ((newSlider.i > 0 || s < 0) && (newSlider.i < newSlider.numSlider - 1 || s > 0)) {
+            newSlider.nextSlide()
+        } else {
+            newSlider.prevSlide()
+        }
+        start = null
+    }
+}
+
+test.addEventListener('mousedown', lock, false);
+test.addEventListener('mouseup', swipe, false);
+
+test.addEventListener('touchstart', lock, false);
+test.addEventListener('touchend', swipe, false);
